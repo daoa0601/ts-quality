@@ -1,0 +1,22 @@
+packages: []
+
+catalogMode: strict
+cleanupUnusedCatalogs: true
+disallowWorkspaceCycles: true
+engineStrict: true
+failIfNoMatch: true
+linkWorkspacePackages: false
+saveExact: true
+savePrefix: ""
+strictDepBuilds: true
+strictPeerDependencies: true
+
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - "@agentic-orch/*"
+
+trustPolicy: no-downgrade
+
+blockExoticSubdeps: true
+strictStorePkgContentCheck: true
+verifyDepsBeforeRun: install

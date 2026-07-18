@@ -1,0 +1,7 @@
+{
+  "extends": "@agentic-orch/ts-quality/tsconfig/node.json",
+  "compilerOptions": {
+    "types": []
+  },
+  "include": ["./api.ts"]
+}

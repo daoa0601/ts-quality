@@ -1,0 +1,58 @@
+{
+  "name": "@agentic-orch/ts-quality",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared TypeScript quality gates, repository guardrails, and configuration presets",
+  "type": "module",
+  "license": "MIT",
+  "packageManager": "pnpm@11.13.1",
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0",
+    "pnpm": "11.13.1"
+  },
+  "main": "./lib/index.mjs",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./lib/index.mjs",
+      "default": "./lib/index.mjs"
+    },
+    "./prettier": {
+      "types": "./types/prettier.d.ts",
+      "import": "./presets/prettier.mjs",
+      "default": "./presets/prettier.mjs"
+    },
+    "./prettier.json": "./presets/prettier.json",
+    "./tsconfig/node": "./presets/tsconfig.node.json",
+    "./tsconfig/node.json": "./presets/tsconfig.node.json",
+    "./tsconfig/build": "./presets/tsconfig.build.json",
+    "./tsconfig/build.json": "./presets/tsconfig.build.json"
+  },
+  "bin": {
+    "ts-quality": "./bin/ts-quality.mjs"
+  },
+  "files": [
+    "bin",
+    "docs",
+    "lib",
+    "presets",
+    "templates",
+    "types",
+    "scripts/require-pnpm.mjs",
+    "README.md",
+    "QUALITY.md",
+    "LICENSE"
+  ],
+  "prettier": "./presets/prettier.mjs",
+  "scripts": {
+    "check": "node --test && pnpm typecheck",
+    "pack:check": "node ./bin/ts-quality.mjs pack",
+    "preinstall": "node scripts/require-pnpm.mjs",
+    "test": "node --test",
+    "typecheck": "tsc -p tests/types/tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3"
+  }
+}
