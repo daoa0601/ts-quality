@@ -18,7 +18,7 @@ test("CLI is directly executable without a build step", () => {
     cwd: root,
     encoding: "utf8",
   });
-  assert.equal(output.trim(), "0.1.0");
+  assert.equal(output.trim(), "0.1.1");
 });
 
 test("published JSON presets are valid and path-independent", () => {

@@ -23,5 +23,5 @@ test("CLI help and version are successful", () => {
   assert.equal(help.status, 0);
   assert.match(help.stdout, /^Usage: ts-quality/u);
   assert.equal(version.status, 0);
-  assert.equal(version.stdout.trim(), "0.1.0");
+  assert.equal(version.stdout.trim(), "0.1.1");
 });

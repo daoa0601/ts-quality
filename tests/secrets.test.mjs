@@ -69,3 +69,25 @@ test("secret scan does not follow symlinks and fails closed on oversized text", 
     boundedResult.findings.some((finding) => finding.includes("32-byte secret-scan limit")),
   );
 });
+
+test("secret scan skips Git submodule entries", (t) => {
+  const root = repository();
+  const child = repository();
+  t.after(() => rmSync(root, { force: true, recursive: true }));
+  t.after(() => rmSync(child, { force: true, recursive: true }));
+
+  execFileSync("git", ["config", "user.name", "Test User"], { cwd: child });
+  execFileSync("git", ["config", "user.email", "test@example.invalid"], { cwd: child });
+  writeFileSync(path.join(child, "README.md"), "# Child\n");
+  execFileSync("git", ["add", "README.md"], { cwd: child });
+  execFileSync("git", ["commit", "--quiet", "-m", "test fixture"], { cwd: child });
+  execFileSync(
+    "git",
+    ["-c", "protocol.file.allow=always", "submodule", "add", "--quiet", child, "nested"],
+    { cwd: root },
+  );
+
+  const result = scanSecrets({ cwd: root });
+  assert.deepEqual(result.findings, []);
+  assert.equal(result.filesInspected, 1);
+});
