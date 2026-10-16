@@ -32,23 +32,9 @@
   "bin": {
     "ts-quality": "./bin/ts-quality.mjs"
   },
-  "files": [
-    "bin",
-    "docs",
-    "lib",
-    "presets",
-    "templates",
-    "types",
-    "scripts/require-pnpm.mjs",
-    "README.md",
-    "QUALITY.md",
-    "LICENSE"
-  ],
   "prettier": "./presets/prettier.mjs",
   "scripts": {
     "check": "node --test && pnpm typecheck",
-    "pack:check": "node ./bin/ts-quality.mjs pack",
-    "preinstall": "node scripts/require-pnpm.mjs",
     "test": "node --test",
     "typecheck": "tsc -p tests/types/tsconfig.json"
   },
