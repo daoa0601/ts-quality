@@ -4,14 +4,9 @@ Shared, runtime-dependency-free quality tooling for the TypeScript repositories 
 The package ships executable JavaScript and declarations directly, so linking it is sufficient;
 consumers do not need to compile it first.
 
-> Status: private local workspace module; npm publication is intentionally disabled.
-
-## Link from a sibling repository
-
-Agent Blocks, Drone, Nexus, and Templar declare
-`"@agentic-orch/ts-quality": "workspace:*"`, include `../ts-quality` in their own
-`pnpm-workspace.yaml`, and keep independent lockfiles. This makes the shared source relationship
-explicit while preserving each repository's toolchain and dependency history.
+Sibling repositories link it as `"@agentic-orch/ts-quality": "workspace:*"` with `../ts-quality`
+listed in their own `pnpm-workspace.yaml`. Required siblings and the shared layout are described in
+the catalog README.
 
 ## Repository commands
 
@@ -21,17 +16,16 @@ Keep the existing repository-level command surface and delegate its shared mecha
 {
   "scripts": {
     "hooks:install": "ts-quality hooks",
-    "pack:check": "ts-quality pack",
     "secrets:scan": "ts-quality secrets"
   }
 }
 ```
 
 Every command accepts `--root <directory>` and otherwise operates on the current directory.
-Long-form aliases (`install-hooks`, `check-pack`, and `scan-secrets`) are also supported.
+Long-form aliases (`install-hooks` and `scan-secrets`) are also supported.
 
-The pnpm enforcement script used by `preinstall` deliberately remains a tiny local repository
-file. An external package is not available yet when a clean install enters `preinstall`.
+The pnpm version is enforced natively: `packageManager` pins an exact pnpm, and
+`pmOnFail: error` plus `engineStrict` in `pnpm-workspace.yaml` reject a mismatched pnpm.
 
 ### Secret scanning
 
@@ -45,28 +39,6 @@ escaped file, line, and category metadata; the matched value is never printed.
 
 This is a high-confidence local guardrail, not a replacement for host-level secret scanning or
 credential rotation.
-
-### Package validation
-
-`ts-quality pack` runs `pnpm pack --dry-run --json`, rejects source, test, coverage, VCS, and
-secret-bearing entries, and verifies every declared main, types, bin, and export target. It also
-verifies a local pnpm preinstall bootstrap when the lifecycle script references
-`require-pnpm.mjs`.
-
-Repositories can add package-specific requirements without replacing the defaults:
-
-```json
-{
-  "tsQuality": {
-    "pack": {
-      "forbiddenPrefixes": ["native/worker/.build/", "native/worker/Tests/"],
-      "requiredFiles": ["SECURITY.md"]
-    }
-  }
-}
-```
-
-Set `requireReadme` to `false` only for a package that intentionally has no README.
 
 ### Managed Git hooks
 
@@ -113,15 +85,6 @@ Prettier can load the ESM preset through `package.json`:
 The stable JSON form is also exported as `@agentic-orch/ts-quality/prettier.json` for tools that cannot
 load ESM configurations.
 
-The package root also exports the scanner, package inspector, and hook installer as a typed ESM
-API. The CLI remains the preferred integration point for repository scripts because it provides a
-stable exit-code and diagnostic contract.
-
-## Continuous integration
-
-This source tree contains a callable workflow as a reference. Because the projects remain separate
-Git repositories and the shared module is local, consumers keep their expanded pinned workflows or
-copy reviewed changes intentionally. See [docs/reusable-ci.md](docs/reusable-ci.md).
-
-Repository-specific jobs—such as Swift validation, integration environments, or sibling source
-checkouts—remain in the consumer workflow.
+The package root also exports the scanner and hook installer as a typed ESM API. The CLI remains
+the preferred integration point for repository scripts because it provides a stable exit-code and
+diagnostic contract.
